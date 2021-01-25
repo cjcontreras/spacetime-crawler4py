@@ -1,9 +1,11 @@
 import re
 from urllib.parse import urlparse, urldefrag
+from urllib.request import *
+from bs4 import BeautifulSoup
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
-    return [link for link in links if is_valid(link)]
+    return[link for link in links if is_valid(link)]
 
 # TODO:
 #   1) edit is_valid such that domains not included in accepted list is 
@@ -17,14 +19,13 @@ def scraper(url, resp):
 
 def extract_next_links(url, resp):
     # get list of urls found after tokenizening the project
-    # 
+    temp = []
+    page = urlopen(url)
+    soup = BeautifulSoup(page, 'html.parser')
+    for link in soup.find_all('a'):
+        temp.append(link.get('href'))
 
-
-
-
-
-
-    return list()
+    return temp
 
 def is_valid(url):
     try:

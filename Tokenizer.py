@@ -28,7 +28,7 @@ def tokenize(TextFilePath):
         tokenizedList = []
         
         for block in iter(lambda: f.read(512), ''):
-            tempList = re.findall(r'[a-zA-Z0-9]+', block.lower()) 
+            tempList = re.findall(r'[a-zA-Z0-9]+', block) 
             # reads from the string of only lowercase chars
             
             # assuming the end of the temp list is a split off word, so I am moving it to be apart of the next block and making the changes 
