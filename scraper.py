@@ -1,19 +1,55 @@
 import re
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urldefrag
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
 
+# TODO:
+#   1) edit is_valid such that domains not included in accepted list is 
+#   rejected - Low Priority
+#   2) 
+#
+#
+#
+#
+
+
 def extract_next_links(url, resp):
-    # Implementation requred.
+    # get list of urls found after tokenizening the project
+    # 
+
+
+
+
+
+
     return list()
 
 def is_valid(url):
     try:
-        parsed = urlparse(url)
+        url = urldefrag(url)
+        parsed = urlparse(url[0])
         if parsed.scheme not in set(["http", "https"]):
             return False
+
+        valids = set([".ics.uci.edu"
+                     ,".cs.uci.edu"
+                             ,".informatics.uci.edu"
+                             ,".stat.uci.edu"
+                             ,"today.uci.edu"
+                             ])
+        present = False
+
+        for domain in valids:
+            if domain in parsed.netloc:
+                present = True
+                break
+
+        if not present:
+            return False
+
+        # Needs to add more possibilities?
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
