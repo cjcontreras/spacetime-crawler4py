@@ -24,12 +24,10 @@ def extract_next_links(url, resp):
     # if resp is bad, return and move on to next query
     good = [200, 201, 202]
     if resp.status not in good:
-        return []
+        return temp
 
     page = urlopen(url)
     soup = BeautifulSoup(page, 'html.parser')
-    print(soup.prettify())
-    return
     for link in soup.find_all('a'):
         temp.append(link.get('href'))
 
