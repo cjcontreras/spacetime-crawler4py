@@ -2,6 +2,7 @@ import re
 from urllib.parse import urlparse, urldefrag
 from urllib.request import *
 from bs4 import BeautifulSoup
+from Tokenizer import *
 
 def scraper(url, resp):
 	links = extract_next_links(url, resp)
