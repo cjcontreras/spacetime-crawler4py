@@ -3,6 +3,8 @@ from urllib.parse import urlparse, urldefrag
 from urllib.request import *
 from bs4 import BeautifulSoup
 from Tokenizer import *
+import hashlib 
+
 
 def scraper(url, resp):
 	links = extract_next_links(url, resp)
@@ -30,13 +32,16 @@ def extract_next_links(url, resp):
 
 	# Basically we do not want to look at any pages where there are breaking errors
 	if resp is not None:
-		good = [200, 201, 202]
-		if resp.status not in good:
+		if resp.status <200 or resp.status > 399:
 			return temp
 
 	# This is in case of the resp being 200 but contains no data. 
 	try:
+		# NOTE: for when the server is back up, I think this urlopen functionis useless	
+		# rather use the raw_response
+		# if it is, then replace 
 		page = urlopen(url)
+		print(resp.raw_response)
 	except:
 		return temp
 	else:
@@ -100,3 +105,28 @@ def is_valid(url):
 	except TypeError:
 		print ("TypeError for ", parsed)
 		raise
+
+def getSimhashVal(text):
+	
+
+class SimHash:
+	def __init__(self, features):
+		self.hashVal = dict()
+		for key, value in features.items():
+			self.hashVal[key] = hashlib.md5(value)
+
+		self.vector = [0]*128 # note that hashlib is 16 bytes, or 128 bits
+		for i in range(len(self.vector)):
+			for key, number in self.hashVal.items():
+				num_bits = 128
+				bits = [(number >> bit) & 1 for bit in range(num_bits - 1, -1, -1)]
+				if bits[i] == 1:
+					vector[i] += features[key]
+				else:
+					vector[i] -= features[key]
+
+		for i in range(len(self.vector)):
+			if self.vector[i] > 0:
+				self.vector[i] = 1
+			else:
+				self.vector[i] = 0
