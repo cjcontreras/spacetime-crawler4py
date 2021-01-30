@@ -21,6 +21,8 @@ def extract_next_links(url, resp):
 	# TODO:
 	# Determine if it is worth scraping
 
+
+
 	# get list of urls found after tokenizening the project
 	temp = []
 	avoid = open("Avoids.txt", 'r')
@@ -107,7 +109,10 @@ def is_valid(url):
 		raise
 
 def getSimhashVal(text):
-	
+	wordList = Tokenizer.Tokenize(text)
+	freq = Tokenizer.computeWordFrequencies(wordList)
+	hasher = SimHash(freq)
+	return hasher.value
 
 class SimHash:
 	def __init__(self, features):
@@ -130,3 +135,5 @@ class SimHash:
 				self.vector[i] = 1
 			else:
 				self.vector[i] = 0
+
+		self.value = self.vector.dot(2**np.arange(self.vector.size)[::-1])

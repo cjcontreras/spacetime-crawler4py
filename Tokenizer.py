@@ -3,8 +3,8 @@ import sys
 import os
 import re
 import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import RegexpTokenizer
+# from nltk.corpus import stopwords
+# from nltk.tokenize import RegexpTokenizer
 
 
 
@@ -22,10 +22,7 @@ from nltk.tokenize import RegexpTokenizer
 # ===========================
 # Therefore runtime: O(n) total time
 
-def Tokenize(fileString):
-    print(stopwords.words("english"))
-    print()
-    
+def Tokenize(fileString): 
     tokenizer = RegexpTokenizer(r'\w+')
     tokenizedList = tokenizer.tokenize(str(fileString))
     
