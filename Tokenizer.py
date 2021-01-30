@@ -2,6 +2,10 @@ from collections import defaultdict
 import sys
 import os
 import re
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import RegexpTokenizer
+
 
 
 # (tokenize) Notes: 
@@ -18,7 +22,20 @@ import re
 # ===========================
 # Therefore runtime: O(n) total time
 
-def tokenize(TextFilePath):
+def Tokenize(fileString):
+    print(stopwords.words("english"))
+    print()
+    
+    tokenizer = RegexpTokenizer(r'\w+')
+    tokenizedList = tokenizer.tokenize(str(fileString))
+    
+    #alphaNumTokens = 
+    #tokenizedList = [token for token in  if token not in stopwords.word("english")]
+    
+    return tokenizedList
+    
+    
+    """
     
     try:
         f = open(TextFilePath, 'r')
@@ -46,6 +63,10 @@ def tokenize(TextFilePath):
         f.close()
         
         return tokenizedList
+        """
+    
+    
+        
             
 
 
