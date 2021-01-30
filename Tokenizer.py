@@ -3,8 +3,8 @@ import sys
 import os
 import re
 import nltk
-# from nltk.corpus import stopwords
-# from nltk.tokenize import RegexpTokenizer
+from nltk.corpus import stopwords
+from nltk.tokenize import RegexpTokenizer
 
 
 

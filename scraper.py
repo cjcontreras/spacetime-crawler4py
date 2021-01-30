@@ -3,7 +3,10 @@ from urllib.parse import urlparse, urldefrag
 from urllib.request import *
 from bs4 import BeautifulSoup
 from Tokenizer import *
-import hashlib 
+import hashlib
+from bitstring import BitArray
+import numpy as np
+import os
 
 
 def scraper(url, resp):
@@ -27,7 +30,7 @@ def extract_next_links(url, resp):
 	temp = []
 	avoid = open("Avoids.txt", 'r')
 	traps = avoid.read()
-
+	avoid.close()
 	
 	if url in traps:
 		return temp
@@ -54,10 +57,30 @@ def extract_next_links(url, resp):
 	# BeautifulSoup takes the page object and converts it into readable HTML
 	# 'a' is speficially a tag in HTML that refers to a new link
 	# link.get('href') returns the value associated with the key
+
+	# PARSING HTML FILE
 		soup = BeautifulSoup(page, 'html.parser')
 		if len(soup.get_text()) < 100:
 			return temp
 
+	# THRESHOLD CHECKING
+		simValue = getSimhashVal(soup.get_text())
+		theshHold = open("thresh.txt", 'r+')
+		if os.stat(theshHold).st_size == 0:
+			theshHold.write(simValue)
+			continue
+		else:
+			currLine = int(theshHold.readline())
+			while currLine:
+				comparison = compareSimhash(currLine, simValue)
+				if comparison > .9:
+					theshHold.close()
+					return temp
+
+		threshHold.write(simValue)
+		theshHold.close()
+
+	# LINK SCRAPING
 		for link in soup.find_all('a'):
 			temp.append(link.get('href'))
 
@@ -109,26 +132,40 @@ def is_valid(url):
 		raise
 
 def getSimhashVal(text):
-	wordList = Tokenizer.Tokenize(text)
-	freq = Tokenizer.computeWordFrequencies(wordList)
+	wordList = Tokenize(text)
+	freq = computeWordFrequencies(wordList)
 	hasher = SimHash(freq)
 	return hasher.value
+
+def compareSimhash(val1, val2):
+	# val1 = bin(val1)[2:]
+	# val2 = bin(val2)[2:]
+	xor = val1^val2
+	xor = ~xor
+	bits = [(xor >> bit) & 1 for bit in range(126 - 1, -1, -1)]
+	sameVal = 0
+	for bit in bits:
+		sameVal += bit
+
+	return sameVal/126
 
 class SimHash:
 	def __init__(self, features):
 		self.hashVal = dict()
-		for key, value in features.items():
-			self.hashVal[key] = hashlib.md5(value)
+		for key in features.keys():
+			bytstr = hashlib.md5(key.encode()).hexdigest()
+			value = BitArray(hex=bytstr)
+			self.hashVal[key] = value.bin[2:]
 
-		self.vector = [0]*128 # note that hashlib is 16 bytes, or 128 bits
-		for i in range(len(self.vector)):
+		self.vector = np.zeros(126) # note that hashlib is 16 bytes, or 126 bits
+		for i in range(0, len(self.vector) - 1):
 			for key, number in self.hashVal.items():
-				num_bits = 128
-				bits = [(number >> bit) & 1 for bit in range(num_bits - 1, -1, -1)]
-				if bits[i] == 1:
-					vector[i] += features[key]
+				# num_bits = 128
+				# bits = [(number >> bit) & 1 for bit in range(num_bits - 1, -1, -1)]
+				if number[i] == '1':
+					self.vector[i] += features[key]
 				else:
-					vector[i] -= features[key]
+					self.vector[i] -= features[key]
 
 		for i in range(len(self.vector)):
 			if self.vector[i] > 0:
@@ -136,4 +173,5 @@ class SimHash:
 			else:
 				self.vector[i] = 0
 
-		self.value = self.vector.dot(2**np.arange(self.vector.size)[::-1])
+		# https://stackoverflow.com/questions/41069825/convert-binary-01-numpy-to-integer-or-binary-string
+		self.value = int(self.vector.dot(2**np.arange(self.vector.size)[::-1]))
