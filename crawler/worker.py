@@ -11,11 +11,37 @@ class Worker(Thread):
         self.logger = get_logger(f"Worker-{worker_id}", "Worker")
         self.config = config
         self.frontier = frontier
+        self.lock = None
         super().__init__(daemon=True)
         
     def run(self):
         while True:
+            # add frontier lock
+            self.frontier.fLock.acquire()
             tbd_url = self.frontier.get_tbd_url()
+
+            # examin domain lock, set accordingly
+            examine = urldefrag(tbd_url)
+            domain = urlparse(examine[0]).netloc
+
+            if ".ics.uci.edu" == domain:
+                self.lock = self.frontier.icslock
+                self.lock.acquire()
+            else if ".cs.uci.edu" == domain:
+                self.lock = self.frontier.cslock
+                self.lock.acquire()
+            else if ".informatics.uci.edu" == domain:
+                self.lock = self.frontier.infolock
+                self.lock.acquire()
+            else if ".stat.uci.edu" == domain:
+                self.lock = self.frontier.statlock
+                self.lock.acquire()
+            else if "today.uci.edu" == domain:
+                self.lock = self.frontier.todaylock
+                self.lock.acquire()
+
+            # release frontier lock 
+            self.frontier.fLock.release()
             if not tbd_url:
                 self.logger.info("Frontier is empty. Stopping Crawler.")
                 break
@@ -25,6 +51,18 @@ class Worker(Thread):
                 f"using cache {self.config.cache_server}.")
             scraped_urls = scraper(tbd_url, resp)
             for scraped_url in scraped_urls:
+                # lock F
+                self.frontier.fLock.acquire()
                 self.frontier.add_url(scraped_url)
+                # release F
+                self.frontier.fLock.release()
+            
+            # MIGHT NOT BE NEEDED
+            # lock F
+            self.frontier.fLock.acquire()
             self.frontier.mark_url_complete(tbd_url)
+            # release F
+            self.frontier.fLock.release()
             time.sleep(self.config.time_delay)
+            # release domain lock
+            self.lock.release()

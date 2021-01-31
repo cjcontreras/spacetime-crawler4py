@@ -12,6 +12,12 @@ class Frontier(object):
         self.logger = get_logger("FRONTIER")
         self.config = config
         self.to_be_downloaded = list()
+        self.frontierLock = threading.RLock()
+        self.icsLock = threading.Rlock()
+        self.csLock = threading.Rlock()
+        self.infoLock = threading.Rlock()
+        self.statLock = threading.Rlock()
+        self.todayLock = threading.Rlock()
         
         if not os.path.exists(self.config.save_file) and not restart:
             # Save file does not exist, but request to load save.
@@ -47,12 +53,14 @@ class Frontier(object):
             f"Found {tbd_count} urls to be downloaded from {total_count} "
             f"total urls discovered.")
 
+        # ADD LOCKS?
     def get_tbd_url(self):
         try:
             return self.to_be_downloaded.pop()
         except IndexError:
             return None
 
+        # ADD LOCKS?
     def add_url(self, url):
         url = normalize(url)
         urlhash = get_urlhash(url)

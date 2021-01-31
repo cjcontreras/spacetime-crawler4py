@@ -7,7 +7,9 @@ import hashlib
 from bitstring import BitArray
 import numpy as np
 import os
+from threading import Thread, Lock
 
+lock = threading.Lock()
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
@@ -24,10 +26,13 @@ def extract_next_links(url, resp):
 	# get list of urls found after tokenizening the project
 	temp = []
 	
+	lock.acquire()
 	# HARDCODED AVOID URLS
 	avoid = open("data/Avoids.txt", 'r')
 	traps = avoid.read()
 	avoid.close()
+
+	lock.release()
 	
 	if url in traps:
 		return temp
@@ -36,12 +41,15 @@ def extract_next_links(url, resp):
 	if resp.status <200 or resp.status > 399:
 		return temp
 
+	lock.acquire()
 	# DATA ANALYSIS 1) unique urls
-	val = open("data/Unique.txt", 'w+')
-	num = int(val.read())
+	f = open("data/Unique.txt", 'w+')
+	num = int(f.read())
 	num += 1
-	val.write(num)
-	val.close()
+	f.write(num)
+	f.close()
+
+	lock.release()
 
 	# Assumption is that the page is a safe object to look at
 	# BeautifulSoup takes the page object and converts it into readable HTML
@@ -55,6 +63,7 @@ def extract_next_links(url, resp):
 	if length < 100:
 		return temp
 
+	lock.acquire()
 	# DATA ANALYSIS 2) largest page
 	f = open("data/Large.txt", 'w+')
 	num = int(val.readline())
@@ -63,8 +72,9 @@ def extract_next_links(url, resp):
 		f.write('\n')
 		f.write(url)
 	f.close()
+	lock.release()
 
-
+	lock.acquire()
 	# THRESHOLD CHECKING
 	simValue, wordList = getSimhashVal(soup.get_text())
 	threshHold = open("data/thresh.txt", 'r+')
@@ -81,13 +91,17 @@ def extract_next_links(url, resp):
 	threshHold.write(str(simValue))
 	threshHold.write('\n')
 	threshHold.close()
+	lock.release()
 
+	lock.acquire()
 	# DATA ANALYSIS 3) 50 most common words
 	f = open("data/Tokens.txt", 'a')
 	f.write(wordList)
 	f.write('\n')
 	f.close()
+	lock.release()
 
+	lock.acquire()
 	# DATA ANALYSIS 2) largest page
 	f = open("data/Large.txt", 'w+')
 	num = int(val.readline())
@@ -96,6 +110,7 @@ def extract_next_links(url, resp):
 		f.write('\n')
 		f.write(url)
 	f.close()
+	locl.release()
 
 	# LINK SCRAPING + DEFRAG
 	for link in soup.find_all('a'):
@@ -132,6 +147,9 @@ def is_valid(url):
 
         if not present:
             return False
+
+        if (parsed.netloc == "today.uci.edu") and ("/department/information_computer_sciences/" not in parsed.path):
+        		return False
 
         # DATA ANALYSIS 4) domain page
         if ".ics.uci.edu" in parsed.netloc:
