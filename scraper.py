@@ -44,9 +44,13 @@ def extract_next_links(url, resp):
 	lock.acquire()
 	# DATA ANALYSIS 1) unique urls
 	f = open("data/Unique.txt", 'w+')
-	num = int(f.read())
+	num = int(next(f).split())
+	print("this is the value from unique.txt: ")
+	print(num)
 	num += 1
-	f.write(num)
+	f.write(str(num))
+	f.write('\n')
+	print(num)
 	f.close()
 
 	lock.release()
@@ -127,8 +131,8 @@ def extract_next_links(url, resp):
 
 def is_valid(url):
 	try:
-		url = urldefrag(url)
-		parsed = urlparse(url[0])
+		defragObj = urldefrag(url)
+		parsed = urlparse(defragObj[0])
 		if parsed.scheme not in set(["http", "https"]):
 			return False
 

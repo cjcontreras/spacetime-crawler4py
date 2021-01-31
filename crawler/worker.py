@@ -4,6 +4,7 @@ from utils.download import download
 from utils import get_logger
 from scraper import scraper
 import time
+from urllib.parse import urlparse
 
 
 class Worker(Thread):
@@ -21,8 +22,7 @@ class Worker(Thread):
             tbd_url = self.frontier.get_tbd_url()
 
             # examin domain lock, set accordingly
-            examine = urldefrag(tbd_url)
-            domain = urlparse(examine[0]).netloc
+            domain = urlparse(tbd_url).netloc
 
             if ".ics.uci.edu" == domain:
                 self.lock = self.frontier.icslock
