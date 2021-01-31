@@ -83,6 +83,8 @@ def extract_next_links(url, resp):
 	threshHold.close()
 
 	# DATA ANALYSIS 3) 50 most common words
+	# basically make a text file for each url and dump wordFreq into it
+	# run a script after. Should be about 10,000 txt files, but 
 
 	# DATA ANALYSIS 2) largest page
 	f = open("Large.txt", 'w+')
