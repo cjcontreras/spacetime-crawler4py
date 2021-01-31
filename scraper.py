@@ -20,6 +20,7 @@ def scraper(url, resp):
 # ==================================================
 
 def extract_next_links(url, resp):
+<<<<<<< HEAD
     # TODO:
     # Determine if it is worth scraping
 
@@ -82,6 +83,87 @@ def extract_next_links(url, resp):
             temp.append(link.get('href'))
 
         return temp
+=======
+
+	# get list of urls found after tokenizening the project
+	temp = []
+	
+	# HARDCODED AVOID URLS
+	avoid = open("Avoids.txt", 'r')
+	traps = avoid.read()
+	avoid.close()
+	
+	if url in traps:
+		return temp
+
+	# RESP STATUS CHECKING
+	if resp.status <200 or resp.status > 399:
+		return temp
+
+	# DATA ANALYSIS 1) unique urls
+	val = open("Unique.txt", 'w+')
+	num = int(val.read())
+	num += 1
+	val.write(num)
+	val.close()
+
+	# Assumption is that the page is a safe object to look at
+	# BeautifulSoup takes the page object and converts it into readable HTML
+	# 'a' is speficially a tag in HTML that refers to a new link
+	# link.get('href') returns the value associated with the key
+	page = resp.raw_response.content
+
+	# PARSING HTML FILE & CHECKING SIZE
+	soup = BeautifulSoup(page, 'html.parser')
+	length = len(soup.get_text())
+	if length < 100:
+		return temp
+
+	# DATA ANALYSIS 2) largest page
+	f = open("Large.txt", 'w+')
+	num = int(val.readline())
+	if length > num:
+		f.write(length)
+		f.write('\n')
+		f.write(url)
+	f.close()
+
+
+	# THRESHOLD CHECKING
+	simValue, wordFreq = getSimhashVal(soup.get_text())
+	threshHold = open("thresh.txt", 'r+')
+	if os.stat("thresh.txt").st_size != 0:
+		currLine = int(threshHold.readline())
+		while currLine:
+			comparison = compareSimhash(int(currLine), simValue)
+			if comparison > .95:
+				threshHold.close()
+				print("too similar")
+				return temp
+			currLine = threshHold.readline()
+
+	threshHold.write(str(simValue))
+	threshHold.write('\n')
+	threshHold.close()
+
+	# DATA ANALYSIS 3) 50 most common words
+
+	# DATA ANALYSIS 2) largest page
+	f = open("Large.txt", 'w+')
+	num = int(val.readline())
+	if length > num:
+		f.write(length)
+		f.write('\n')
+		f.write(url)
+	f.close()
+
+	# LINK SCRAPING
+	for link in soup.find_all('a'):
+		temp.append(link.get('href'))
+
+
+	return temp
+>>>>>>> 13ab8b4d67e84369db1c60a2592eae1605cb70df
 
 
 # ==================================================
@@ -129,11 +211,18 @@ def is_valid(url):
         raise
 
 def getSimhashVal(text):
+<<<<<<< HEAD
     wordList = Tokenize(text)
         
     freq = computeWordFrequencies(wordList)
     hasher = SimHash(freq)
     return hasher.value
+=======
+	wordList = Tokenize(text)
+	freq = computeWordFrequencies(wordList)
+	hasher = SimHash(freq)
+	return hasher.value, freq[100:]
+>>>>>>> 13ab8b4d67e84369db1c60a2592eae1605cb70df
 
 def compareSimhash(val1, val2):
     # val1 = bin(val1)[2:]
