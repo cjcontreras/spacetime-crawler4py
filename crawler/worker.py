@@ -27,16 +27,16 @@ class Worker(Thread):
             if ".ics.uci.edu" == domain:
                 self.lock = self.frontier.icslock
                 self.lock.acquire()
-            else if ".cs.uci.edu" == domain:
+            elif ".cs.uci.edu" == domain:
                 self.lock = self.frontier.cslock
                 self.lock.acquire()
-            else if ".informatics.uci.edu" == domain:
+            elif ".informatics.uci.edu" == domain:
                 self.lock = self.frontier.infolock
                 self.lock.acquire()
-            else if ".stat.uci.edu" == domain:
+            elif ".stat.uci.edu" == domain:
                 self.lock = self.frontier.statlock
                 self.lock.acquire()
-            else if "today.uci.edu" == domain:
+            elif "today.uci.edu" == domain:
                 self.lock = self.frontier.todaylock
                 self.lock.acquire()
 
