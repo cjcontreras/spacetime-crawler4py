@@ -25,7 +25,7 @@ def extract_next_links(url, resp):
 	temp = []
 	
 	# HARDCODED AVOID URLS
-	avoid = open("Avoids.txt", 'r')
+	avoid = open("data/Avoids.txt", 'r')
 	traps = avoid.read()
 	avoid.close()
 	
@@ -37,7 +37,7 @@ def extract_next_links(url, resp):
 		return temp
 
 	# DATA ANALYSIS 1) unique urls
-	val = open("Unique.txt", 'w+')
+	val = open("data/Unique.txt", 'w+')
 	num = int(val.read())
 	num += 1
 	val.write(num)
@@ -56,7 +56,7 @@ def extract_next_links(url, resp):
 		return temp
 
 	# DATA ANALYSIS 2) largest page
-	f = open("Large.txt", 'w+')
+	f = open("data/Large.txt", 'w+')
 	num = int(val.readline())
 	if length > num:
 		f.write(length)
@@ -66,9 +66,9 @@ def extract_next_links(url, resp):
 
 
 	# THRESHOLD CHECKING
-	simValue, wordFreq = getSimhashVal(soup.get_text())
-	threshHold = open("thresh.txt", 'r+')
-	if os.stat("thresh.txt").st_size != 0:
+	simValue, wordList = getSimhashVal(soup.get_text())
+	threshHold = open("data/thresh.txt", 'r+')
+	if os.stat("data/thresh.txt").st_size != 0:
 		currLine = int(threshHold.readline())
 		while currLine:
 			comparison = compareSimhash(int(currLine), simValue)
@@ -83,11 +83,13 @@ def extract_next_links(url, resp):
 	threshHold.close()
 
 	# DATA ANALYSIS 3) 50 most common words
-	# basically make a text file for each url and dump wordFreq into it
-	# run a script after. Should be about 10,000 txt files, but 
+	f = open("data/Tokens.txt", 'a')
+	f.write(wordList)
+	f.write('\n')
+	f.close()
 
 	# DATA ANALYSIS 2) largest page
-	f = open("Large.txt", 'w+')
+	f = open("data/Large.txt", 'w+')
 	num = int(val.readline())
 	if length > num:
 		f.write(length)
@@ -95,9 +97,9 @@ def extract_next_links(url, resp):
 		f.write(url)
 	f.close()
 
-	# LINK SCRAPING
+	# LINK SCRAPING + DEFRAG
 	for link in soup.find_all('a'):
-		temp.append(link.get('href'))
+		temp.append(urldefrag(link.get('href')))
 
 
 	return temp
@@ -131,6 +133,13 @@ def is_valid(url):
         if not present:
             return False
 
+        # DATA ANALYSIS 4) domain page
+        if ".ics.uci.edu" in parsed.netloc:
+        	f = open("data/Domain.txt", 'a')
+			f.write(url)
+			f.write('\n')
+			f.close()
+
         # Needs to add more possibilities?
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
@@ -146,11 +155,15 @@ def is_valid(url):
         print ("TypeError for ", parsed)
         raise
 
+
+
+# HELPER FUNCTIONS
+
 def getSimhashVal(text):
     wordList = Tokenize(text)
     freq = computeWordFrequencies(wordList)
     hasher = SimHash(freq)
-    return hasher.value, freq[100:]
+    return hasher.value, wordList
 
 def compareSimhash(val1, val2):
     # val1 = bin(val1)[2:]
