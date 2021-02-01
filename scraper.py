@@ -89,10 +89,14 @@ def extract_next_links(url, resp):
     # PARSING HTML FILE & CHECKING SIZE
     length = 0
     soup = BeautifulSoup(page, 'html.parser')
+    length = len(soup.getText(strip = True).split())
+    '''
     for line in soup.find_all('p').getText():
         length += len(line)
     if length < 100:
         return temp
+    '''
+
 
 
     
