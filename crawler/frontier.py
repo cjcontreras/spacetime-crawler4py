@@ -18,6 +18,7 @@ class Frontier(object):
         self.infoLock = RLock()
         self.statLock = RLock()
         self.todayLock = RLock()
+        self.scrap = RLock()
         
         if not os.path.exists(self.config.save_file) and not restart:
             # Save file does not exist, but request to load save.

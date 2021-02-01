@@ -7,9 +7,7 @@ import hashlib
 from bitstring import BitArray
 import numpy as np
 import os
-from threading import Thread, Lock
 
-lock = Lock()
 
 def scraper(url, resp):
 	links = extract_next_links(url, resp)
@@ -26,13 +24,13 @@ def extract_next_links(url, resp):
     # get list of urls found after tokenizening the project
     temp = []
 
-    lock.acquire()
+
     # HARDCODED AVOID URLS
     avoid = open("data/Avoids.txt", 'r')
     traps = avoid.read()
     avoid.close()
 
-    lock.release()
+
 
     if url in traps:
         return temp
@@ -41,7 +39,7 @@ def extract_next_links(url, resp):
     if resp.status <200 or resp.status > 399:
         return temp
 
-    lock.acquire()
+
     # DATA ANALYSIS 1) unique urls
     #f = open("data/Unique.txt", 'w+') #should it be w+ or r+?
     
@@ -63,10 +61,11 @@ def extract_next_links(url, resp):
         newNum = int(currentNum) + 1
         f = open("data/Unique.txt", "w+")
         f.write(str(newNum))
-        f.close()
+        f.close()      
 
-        
-    lock. release()
+
+    # END DA 1)
+    
     '''
     num = int(next(f).split())
 	print("this is the value from unique.txt: ")
@@ -88,24 +87,16 @@ def extract_next_links(url, resp):
     page = resp.raw_response.content
 
     # PARSING HTML FILE & CHECKING SIZE
+    length = 0
     soup = BeautifulSoup(page, 'html.parser')
-    length = len(soup.get_text())
+    for line in soup.find_all('p').getText():
+        length += len(line)
     if length < 100:
         return temp
 
-    lock.acquire()
-    # DATA ANALYSIS 2) largest page
-    f = open("data/Large.txt", 'w+')
-    num = int(val.readline())
-    if length > num:
-        f.write(length)
-        f.write('\n')
-        f.write(url)
-    f.close()
-    lock.release()
 
-    lock.acquire()
-    # THRESHOLD CHECKING
+    
+    # SIMHASH CHECKING
     simValue, wordList = getSimhashVal(soup.get_text())
     threshHold = open("data/thresh.txt", 'r+')
     if os.stat("data/thresh.txt").st_size != 0:
@@ -121,30 +112,48 @@ def extract_next_links(url, resp):
     threshHold.write(str(simValue))
     threshHold.write('\n')
     threshHold.close()
-    lock.release()
+    # END SIMHASH
 
-    lock.acquire()
-    # DATA ANALYSIS 3) 50 most common words
+    
+    # DATA ANALYSIS 3) top 50 words overall
+
     f = open("data/Tokens.txt", 'a')
-    f.write(wordList)
+    for word in wordList:
+    	f.write(word)
+    	f.write(' ')
     f.write('\n')
     f.close()
-    lock.release()
 
-    lock.acquire()
-    # DATA ANALYSIS 2) largest page
-    f = open("data/Large.txt", 'w+')
-    num = int(val.readline())
-    if length > num:
-        f.write(length)
-        f.write('\n')
+    # END DA 3)
+	
+	# DATA ANALYSIS 2) largest page
+
+    f = open("data/Large.txt","r")
+    currentNum = f.read()
+
+    if currentNum == "":
+        #this means file is empty,
+        f.close()
+        f = open("data/Large.txt", "w+")
+        f.write(str(length))
+        f.write(', ')
         f.write(url)
-    f.close()
-    locl.release()
+        f.close()
+    else:
+        f.close()
+        currNum = currentNum.split(',')
+        if length > int(currNum[0]):
+        	f = open("data/Large.txt", "w+")
+        	f.write(str(length))
+        	f.write(', ')
+        	f.write(url)
+        	f.close()
+
+    # END DA 2)    
 
     # LINK SCRAPING + DEFRAG
     for link in soup.find_all('a'):
-        temp.append(urldefrag(link.get('href')))
+        temp.append(urldefrag(link.get('href'))[0])
 
 
     return temp
@@ -157,8 +166,8 @@ def extract_next_links(url, resp):
 
 def is_valid(url):
     try:
-        defragObj = urldefrag(url)
-        parsed = urlparse(defragObj[0])
+        # defragObj = urldefrag(url)
+        parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
             return False
 
