@@ -93,9 +93,10 @@ def extract_next_links(url, resp):
     '''
     for line in soup.find_all('p').getText():
         length += len(line)
+    '''
     if length < 100:
         return temp
-    '''
+    
 
 
 
@@ -188,7 +189,7 @@ def is_valid(url):
                 present = True
                 break
 
-        if not present:
+        if not present or "replytocom" in parsed.query:
             return False
 
         if (parsed.netloc == "today.uci.edu") and ("/department/information_computer_sciences/" not in parsed.path):
@@ -205,11 +206,11 @@ def is_valid(url):
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
-            + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
+            + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf|txt"
             + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
-            + r"|thmx|mso|arff|rtf|jar|csv"
+            + r"|thmx|mso|arff|rtf|jar|csv|war|apk|ppsx"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
 
     except TypeError:

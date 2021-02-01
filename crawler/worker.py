@@ -17,25 +17,25 @@ class Worker(Thread):
     def run(self):
         while True:
             # add frontier lock
-            self.frontier.fLock.acquire()
+            # self.frontier.fLock.acquire()
             tbd_url = self.frontier.get_tbd_url()
 
-            # examin domain lock, set accordingly
-            domain = urlparse(tbd_url).netloc
+            # # examin domain lock, set accordingly
+            # domain = urlparse(tbd_url).netloc
 
-            if ".ics.uci.edu" in domain:
-                self.frontier.icsLock.acquire()
-            elif ".cs.uci.edu" in domain:
-                self.frontier.csLock.acquire()
-            elif "informatics.uci.edu" in domain:
-                self.frontier.infoLock.acquire()
-            elif ".stat.uci.edu" in domain:
-                self.frontier.statLock.acquire()
-            elif "today.uci.edu" in domain:
-                self.frontier.todayLock.acquire()
+            # if ".ics.uci.edu" in domain:
+            #     self.frontier.icsLock.acquire()
+            # elif ".cs.uci.edu" in domain:
+            #     self.frontier.csLock.acquire()
+            # elif "informatics.uci.edu" in domain:
+            #     self.frontier.infoLock.acquire()
+            # elif ".stat.uci.edu" in domain:
+            #     self.frontier.statLock.acquire()
+            # elif "today.uci.edu" in domain:
+            #     self.frontier.todayLock.acquire()
 
-            # release frontier lock 
-            self.frontier.fLock.release()
+            # # release frontier lock 
+            # self.frontier.fLock.release()
             if not tbd_url:
                 self.logger.info("Frontier is empty. Stopping Crawler.")
                 break
@@ -44,23 +44,20 @@ class Worker(Thread):
                 f"Downloaded {tbd_url}, status <{resp.status}>, "
                 f"using cache {self.config.cache_server}.")
             
-            self.frontier.scrap.acquire()
+            # self.frontier.scrap.acquire()
             scraped_urls = scraper(tbd_url, resp)
-            self.frontier.scrap.release()
+            # self.frontier.scrap.release()
             
 
-            self.frontier.fLock.acquire()
-            
+            # self.frontier.fLock.acquire()
             for scraped_url in scraped_urls:
                 self.frontier.add_url(scraped_url)
                 # release F
-            self.frontier.fLock.release()
+            # self.frontier.fLock.release()
 
 
             # MIGHT NOT BE NEEDED
             # lock F
-            
-            
             self.frontier.mark_url_complete(tbd_url)
             # release F
             
@@ -68,13 +65,13 @@ class Worker(Thread):
             time.sleep(self.config.time_delay)
             # release domain lock
             
-            if ".ics.uci.edu" in domain:
-                self.frontier.icsLock.release()
-            elif ".cs.uci.edu" in domain:
-                self.frontier.csLock.release()
-            elif "informatics.uci.edu" in domain:
-                self.frontier.infoLock.release()
-            elif ".stat.uci.edu" in domain:
-                self.frontier.statLock.release()
-            elif "today.uci.edu" in domain:
-                self.frontier.todayLock.release()
+            # if ".ics.uci.edu" in domain:
+            #     self.frontier.icsLock.release()
+            # elif ".cs.uci.edu" in domain:
+            #     self.frontier.csLock.release()
+            # elif "informatics.uci.edu" in domain:
+            #     self.frontier.infoLock.release()
+            # elif ".stat.uci.edu" in domain:
+            #     self.frontier.statLock.release()
+            # elif "today.uci.edu" in domain:
+            #     self.frontier.todayLock.release()

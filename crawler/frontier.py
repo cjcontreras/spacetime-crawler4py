@@ -1,7 +1,7 @@
 import os
 import shelve
 
-from threading import Thread, RLock
+from threading import Thread, RLock, Lock
 from queue import Queue, Empty
 
 from utils import get_logger, get_urlhash, normalize
@@ -12,13 +12,13 @@ class Frontier(object):
         self.logger = get_logger("FRONTIER")
         self.config = config
         self.to_be_downloaded = list()
-        self.fLock = RLock()
-        self.icsLock = RLock()
-        self.csLock = RLock()
-        self.infoLock = RLock()
-        self.statLock = RLock()
-        self.todayLock = RLock()
-        self.scrap = RLock()
+        # self.fLock = RLock()
+        # self.icsLock = RLock()
+        # self.csLock = RLock()
+        # self.infoLock = RLock()
+        # self.statLock = RLock()
+        # self.todayLock = RLock()
+        # self.scrap = Lock()
         
         if not os.path.exists(self.config.save_file) and not restart:
             # Save file does not exist, but request to load save.
