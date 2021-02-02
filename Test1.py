@@ -1,14 +1,15 @@
 import re
 from utils import response
-from urllib.parse import urlparse, urljoin, urlopen
-# from scraper import *
+from urllib.parse import urlparse, urljoin, urldefrag
+from urllib.request import *
+from scraper import is_valid
 from bs4 import BeautifulSoup
 
 
 if __name__ == '__main__':
 	
-
-	page = urlopen('https://www.stat.uci.edu/minor-in-statistics')
+	url = 'https://www.stat.uci.edu/minor-in-statistics'
+	page = urlopen(url)
 	soup = BeautifulSoup(page, 'html.parser')
 
 	temp =[]
@@ -20,6 +21,14 @@ if __name__ == '__main__':
 			temp.append(foundLink)
 
 	print(temp)
+	print("\n\n")
+
+	valids = []
+	for link in temp:
+		if is_valid(link):
+			valids.append(link)
+
+	print(valids)
 
 	# parsed = urlparse("//www.ics.uci.edu/community/news/view_news?id=1906")
 

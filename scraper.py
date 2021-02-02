@@ -159,6 +159,8 @@ def extract_next_links(url, resp):
     # LINK SCRAPING + DEFRAG
     for link in soup.find_all('a'):
     	foundLink = urldefrag(link.get('href'))[0]
+    	if "http" not in foundLink:
+    		urljoin(url, foundLink)
     	if foundLink not in temp:
         	temp.append(foundLink)
 
