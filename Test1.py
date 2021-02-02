@@ -1,22 +1,39 @@
 import re
 from utils import response
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin, urlopen
 # from scraper import *
 from bs4 import BeautifulSoup
 
 
 if __name__ == '__main__':
-    
-	parsed = urlparse("https://evoke.ics.uci.edu/values-in-design-fellows-honored-at-iconference-2013/?replytocom=40903#respond")
+	
 
-	print(parsed)
+	page = urlopen('https://www.stat.uci.edu/minor-in-statistics')
+	soup = BeautifulSoup(page, 'html.parser')
 
-    # page = urlopen('https://www.stat.uci.edu/minor-in-statistics')
-    
-    # soup = BeautifulSoup(page,'html.parser')
-    # l = len(soup.getText(strip = True).split())
-    # print(l)
-    
+	temp =[]
+	for link in soup.find_all('a'):
+		foundLink = urldefrag(link.get('href'))[0]
+		if "http" not in foundLink:
+			urljoin(url, foundLink)
+		if foundLink not in temp:
+			temp.append(foundLink)
+
+	print(temp)
+
+	# parsed = urlparse("//www.ics.uci.edu/community/news/view_news?id=1906")
+
+	# print(parsed)
+
+	# result = urljoin("https://www.ics.uci.edu/community", "//stats/news/view_news?id=1906")
+	# print(result)
+
+	# page = urlopen('https://www.stat.uci.edu/minor-in-statistics')
+	
+	# soup = BeautifulSoup(page,'html.parser')
+	# l = len(soup.getText(strip = True).split())
+	# print(l)
+	
 	# val = getSimhashVal("Hello there my name is conner and i like to code")
 	# print(val)
 	# val1 = getSimhashVal("Hello there my name is meryl and i like to program")

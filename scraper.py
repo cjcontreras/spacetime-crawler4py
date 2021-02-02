@@ -36,7 +36,7 @@ def extract_next_links(url, resp):
         return temp
 
     # RESP STATUS CHECKING
-    if resp.status <200 or resp.status > 399:
+    if (resp.status < 200) or (resp.status > 399):
         return temp
 
 
@@ -158,7 +158,9 @@ def extract_next_links(url, resp):
 
     # LINK SCRAPING + DEFRAG
     for link in soup.find_all('a'):
-        temp.append(urldefrag(link.get('href'))[0])
+    	foundLink = urldefrag(link.get('href'))[0]
+    	if foundLink not in temp:
+        	temp.append(foundLink)
 
 
     return temp
@@ -196,7 +198,7 @@ def is_valid(url):
             return False
 
         # DATA ANALYSIS 4) domain page
-        if ".ics.uci.edu" in parsed.netloc:
+        if ".ics.uci.edu" in parsed.netloc and ("www" not in parsed.netloc):
             f = open("data/Domain.txt", 'a')
             f.write(url)
             f.write('\n')
