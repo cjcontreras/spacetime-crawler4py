@@ -8,17 +8,17 @@ from bs4 import BeautifulSoup
 
 if __name__ == '__main__':
 	
-	url = 'https://www.stat.uci.edu/minor-in-statistics'
+	url = 'https://www.ics.uci.edu/ugrad'
 	page = urlopen(url)
 	soup = BeautifulSoup(page, 'html.parser')
 
 	temp =[]
 	for link in soup.find_all('a'):
-		foundLink = urldefrag(link.get('href'))[0]
+		foundLink = str(urldefrag(link.get('href'))[0])
 		if "http" not in foundLink:
-			urljoin(url, foundLink)
-		if foundLink not in temp:
-			temp.append(foundLink)
+			foundLink = urljoin(url, foundLink)
+			if foundLink not in temp:
+				temp.append(foundLink)
 
 	print(temp)
 	print("\n\n")
