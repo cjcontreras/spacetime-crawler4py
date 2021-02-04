@@ -3,8 +3,9 @@ import sys
 import os
 import re
 import nltk
-from nltk.corpus import stopwords
+from nltk.corpus import stopwords 
 from nltk.tokenize import RegexpTokenizer
+
 
 
 
@@ -27,7 +28,7 @@ def Tokenize(fileString):
     tokenizedList = tokenizer.tokenize(str(fileString))
     
     #alphaNumTokens = 
-    #tokenizedList = [token for token in  if token not in stopwords.word("english")]
+    tokenizedList = [token for token in tokenizedList if token not in stopwords.words("english")]
     
     return tokenizedList
     

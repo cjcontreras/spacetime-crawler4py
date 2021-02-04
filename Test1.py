@@ -4,11 +4,26 @@ from urllib.parse import urlparse, urljoin, urldefrag
 from urllib.request import *
 from scraper import is_valid
 from bs4 import BeautifulSoup
+from Tokenizer import *
+from collections import defaultdict
+
 
 
 if __name__ == '__main__':
-	
-	url = 'https://www.stat.uci.edu/minor-in-statistics'
+    tokenFreq = defaultdict(lambda: 0)
+    
+    s = "the cat and I ate a lot of food, but we didn't finish "
+    
+    with open("/TestRun Data/Tokens.txt", "r") as input:
+        for line in input: 
+            for word in line.split():
+                tokenFreq[word.lower()] += 1
+    tokenFreq = sorted(tokenFreq.items(),key= lambda item: item[1], reverse = True)
+    print(tokenFreq)
+
+
+    '''
+    url = 'https://www.stat.uci.edu/minor-in-statistics'
 	page = urlopen(url)
 	soup = BeautifulSoup(page, 'html.parser')
 
@@ -29,6 +44,9 @@ if __name__ == '__main__':
 			valids.append(link)
 
 	print(valids)
+    '''
+	
+	
 
 	# parsed = urlparse("//www.ics.uci.edu/community/news/view_news?id=1906")
 
