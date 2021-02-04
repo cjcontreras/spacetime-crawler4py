@@ -32,7 +32,6 @@ def Tokenize(fileString):
     
     return tokenizedList
     
-    
     """
     
     try:

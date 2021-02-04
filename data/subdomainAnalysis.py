@@ -6,7 +6,7 @@ subdomains = defaultdict(lambda: 0)
 with open("Domain.txt", "r") as input:
     for line in input:
         start = line.find("://") + 3
-        subdomains[line [start:line.find("ics.uci.edu") + 11] ] += 1
+        subdomains[line [start:line.find("ics.uci.edu") + 11].lower()] += 1
         
 sortedSubdomains = sorted(subdomains.items(),key = lambda item: item[0])
     
