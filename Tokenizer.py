@@ -24,12 +24,19 @@ from nltk.tokenize import RegexpTokenizer
 # Therefore runtime: O(n) total time
 
 def Tokenize(fileString): 
+    
+    #imported nlkt in an attempt to filter utilize its stopwords and tokenizing function
+    
+    #used RegexpTokenizer function from nltk that will tokenize things based on them being (an) alphanumeric character(s)
     tokenizer = RegexpTokenizer(r'\w+')
+    
+    #tokenizer uses NLTK's tokenize function in order to get the tokens from the string being passed in (string being the contents of the file)
     tokenizedList = tokenizer.tokenize(str(fileString))
     
-    #alphaNumTokens = 
+    #filtering out the english stopwords from list of tokens tokenizer.tokenize() returned. 
     tokenizedList = [token for token in tokenizedList if token not in stopwords.words("english")]
     
+    #returning finalized list of tokens that do not include stopwords
     return tokenizedList
     
     """

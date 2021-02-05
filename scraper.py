@@ -16,6 +16,7 @@ import os
 # ==================================================
 
 def scraper(url, resp):
+    #scrapes all the valid lists within the list returned by extract_next_links
 	links = extract_next_links(url, resp)
 	return[link for link in links if is_valid(link)]
 
@@ -60,6 +61,7 @@ def extract_next_links(url, resp):
 		f.write("1")
 		f.close()
 	else:
+        #if file is not empty, add 1 to the current value in the file and then overwrite it 
 		f.close()
 		newNum = int(currentNum) + 1
 		f = open("data/Unique.txt", "w+")
@@ -146,6 +148,8 @@ def extract_next_links(url, resp):
 		f.close()
 		currNum = currentNum.split(',')
 		# compares the current largest page with the new found largest page
+        #if current file is larger than previously largest file, overwrite the info in the file to reflect that
+        
 		if length > int(currNum[0]):
 			f = open("data/Large.txt", "w+")
 			f.write(str(length))
@@ -184,7 +188,8 @@ def is_valid(url):
 		parsed = urlparse(url)
 		if parsed.scheme not in set(["http", "https"]):
 			return False
-
+        
+        #establishing what pages we want to consider for our crawl 
 		valids = set([".ics.uci.edu"
 					 ,".cs.uci.edu"
 							 ,".informatics.uci.edu"
