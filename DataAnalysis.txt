@@ -1,0 +1,165 @@
+
+1. 19620 unique pages found
+
+2. longest page: http://www.ics.uci.edu/~dechter/talks/radcliffe-pub.pps (23587)
+
+3. 50 most common words: 
+	1: 1, 22538
+	2: 0, 18063
+	3: data, 16601
+	4: 2, 16062
+	5: 04, 15537
+	6: 3, 10999
+	7: 4, 9505
+	8: 5, 8148
+	9: the, 7945
+	10: a, 7622
+	11: 10, 7490
+	12: research, 7328
+	13: i, 7311
+	14: 6, 6828
+	15: information, 6739
+	16: computer, 6657
+	17: b, 6564
+	18: uci, 6498
+	19: set, 6438
+	20: 05, 5985
+	21: p, 5597
+	22: d, 5579
+	23: 8, 5563
+	24: 7, 5413
+	25: c, 5298
+	26: n, 5242
+	27: j, 5062
+	28: learning, 5010
+	29: s, 4984
+	30: 2020, 4758
+	31: e, 4728
+	32: contact, 4703
+	33: 9, 4646
+	34: policy, 4367
+	35: students, 4264
+	36: time, 4215
+	37: x, 4197
+	38: m, 4157
+	39: systems, 4128
+	40: l, 4034
+	41: ics, 4006
+	42: in, 3887
+	43: about, 3832
+	44: r, 3766
+	45: this, 3627
+	46: ramesh, 3607
+	47: student, 3540
+	48: events, 3518
+	49: machine, 3502
+	50: classification, 3425
+
+
+4. 105 ics.uci.edu subdomains 
+
+	acoi.ics.uci.edu, 301
+	aiclub.ics.uci.edu, 4
+	alumni.ics.uci.edu, 1
+	archive.ics.uci.edu, 33898
+	asterix.ics.uci.edu, 81
+	asterixdb.ics.uci.edu, 1
+	betapro.proteomics.ics.uci.edu, 2
+	calendar.ics.uci.edu, 243
+	cbcl.ics.uci.edu, 173
+	cdb.ics.uci.edu, 1
+	cert.ics.uci.edu, 4
+	chenli.ics.uci.edu, 18
+	circadiomics.ics.uci.edu, 32
+	closeup.ics.uci.edu, 1
+	cml.ics.uci.edu, 1462
+	cocoa-krispies.ics.uci.edu, 1
+	codeexchange.ics.uci.edu, 3
+	computableplant.ics.uci.edu, 341
+	contact.ics.uci.edu, 1
+	contact14.ics.uci.edu, 1
+	coronavirustwittermap.ics.uci.edu, 2
+	create.ics.uci.edu, 1
+	cwicsocal18.ics.uci.edu, 174
+	cyberclub.ics.uci.edu, 88
+	cybert.ics.uci.edu, 57
+	duke.ics.uci.edu, 1
+	duttgroup.ics.uci.edu, 740
+	dynamo.ics.uci.edu, 1
+	elms.ics.uci.edu, 1
+	emj.ics.uci.edu, 715
+	evoke.ics.uci.edu, 520
+	fano.ics.uci.edu, 2
+	flamingo.ics.uci.edu, 1
+	fr.ics.uci.edu, 37
+	futurehealth.ics.uci.edu, 22
+	givargis.ics.uci.edu, 1
+	gonet.genomics.ics.uci.edu, 1
+	grape.ics.uci.edu, 680
+	graphics.ics.uci.edu, 9
+	graphmod.ics.uci.edu, 4
+	hai.ics.uci.edu, 110
+	halps.ics.uci.edu, 1
+	hana.ics.uci.edu, 85
+	hanalab.ics.uci.edu, 1
+	helpdesk.ics.uci.edu, 1
+	hobbes.ics.uci.edu, 79
+	hombao.ics.uci.edu, 71
+	honors.ics.uci.edu, 1
+	i-sensorium.ics.uci.edu, 11
+	iasl.ics.uci.edu, 1
+	informatics.ics.uci.edu, 1
+	intranet.ics.uci.edu, 236
+	ipubmed.ics.uci.edu, 5
+	isg.ics.uci.edu, 1328
+	jgarcia.ics.uci.edu, 73
+	jobs.ics.uci.edu, 1
+	kdd.ics.uci.edu, 19
+	labbie.ics.uci.edu, 1
+	luci.ics.uci.edu, 3
+	mailman.ics.uci.edu, 51
+	malek.ics.uci.edu, 9
+	mcs.ics.uci.edu, 832
+	mdogucu.ics.uci.edu, 35
+	mds.ics.uci.edu, 110
+	mhcid.ics.uci.edu, 291
+	mine10.ics.uci.edu, 1
+	mine5.ics.uci.edu, 1
+	mlphysics.ics.uci.edu, 12
+	motifmap-rna.ics.uci.edu, 7
+	motifmap.ics.uci.edu, 6
+	mse.ics.uci.edu, 127
+	mswe.ics.uci.edu, 277
+	mupro.proteomics.ics.uci.edu, 10
+	nalini.ics.uci.edu, 30
+	ngs.ics.uci.edu, 24578
+	omni.ics.uci.edu, 1
+	password.ics.uci.edu, 1
+	pepito.proteomics.ics.uci.edu, 2
+	perennialpolycultures.ics.uci.edu, 1
+	plrg.ics.uci.edu, 196
+	radicle.ics.uci.edu, 2
+	redmiles.ics.uci.edu, 4
+	riscit.ics.uci.edu, 4
+	scratch.proteomics.ics.uci.edu, 7
+	sdcl.ics.uci.edu, 2100
+	seal.ics.uci.edu, 239
+	selectpro.proteomics.ics.uci.edu, 21
+	sherlock.ics.uci.edu, 31
+	sidepro.proteomics.ics.uci.edu, 2
+	sli.ics.uci.edu, 2631
+	sourcerer.ics.uci.edu, 1
+	statconsulting.ics.uci.edu, 37
+	student-council.ics.uci.edu, 1
+	swiki.ics.uci.edu, 196
+	timesheet.ics.uci.edu, 1
+	tippersweb.ics.uci.edu, 395
+	tmbpro.ics.uci.edu, 2
+	transformativeplay.ics.uci.edu, 210
+	tutors.ics.uci.edu, 1
+	ugradforms.ics.uci.edu, 1
+	unite.ics.uci.edu, 117
+	vision.ics.uci.edu, 2717
+	wearablegames.ics.uci.edu, 26
+	wics.ics.uci.edu, 4243
+	xtune.ics.uci.edu, 12
