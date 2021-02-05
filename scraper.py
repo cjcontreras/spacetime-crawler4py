@@ -240,42 +240,102 @@ def is_valid(url):
 
 # HELPER FUNCTIONS implemented from scratch
 
+
+# ==================================================
+#
+#	int, list getSimhashVal(str)
+# 
+#	this object creates a Simhash object using the frequncies of the
+#	found list of tokens. returns the found value
+#
+#	since tokenize and computeWord are each O(n), and the simhash object
+#	is also O(n), this function works in O(n) time. See below
+# 	for analysis on SimHash object initialization
+#
+# ==================================================
+
 def getSimhashVal(text):
 	wordList = Tokenize(text)
 	freq = computeWordFrequencies(wordList)
 	hasher = SimHash(freq)
 	return hasher.value, wordList
 
+# ==================================================
+#
+#	int compareSimhash(val1, val2)
+# 
+#	this function takes two values and does a simHash comparison
+#	of the values discussed in class. It is essentially a bitwise comparison
+#	returns the ratio of bits that are similiar
+#
+# ==================================================
+
 def compareSimhash(val1, val2):
-	# val1 = bin(val1)[2:]
-	# val2 = bin(val2)[2:]
+	# first step is XOR the two values
 	xor = val1^val2
+	# next is bitwise negation of the XOR
 	xor = ~xor
+	# This is a list of the bits corresponding to the found XOR num
+	# this was not of my own code, but something found on stackoverflow
+	# https://stackoverflow.com/questions/16659944/iterate-between-bits-in-a-binary-number/16659985
+	# Full credit to this for using this line of code, Obviously was changed to match our use of the bitwise manipulation
 	bits = [(xor >> bit) & 1 for bit in range(126 - 1, -1, -1)]
 	sameVal = 0
+	# since it is now a string, can simply iterate over counting all the 1s
 	for bit in bits:
 		sameVal += bit
 
+	# returns the added up values and divides by 126 since this was the working number of bits
 	return sameVal/126
+
+# ==================================================
+#
+#	class Simhash(features)
+# 
+#	This object is key to finding the simHash value
+# 	it follows the techniques discussed in lecture, matching the 
+# 	theory to the practical applications 
+#
+#	Below details more, but since there is a constant number of iterations
+# 	over the given features, this will result in O(n) runtime
+#	
+#	
+#
+# ==================================================
 
 class SimHash:
 	def __init__(self, features):
+		# Stores a dict for the hashvalues
 		self.hashVal = dict()
+		# for each given token (key), hashes the token and stores the valye 
+		# BitArray is a libary that allows for easy storage of bitwise objects
+		# This is stored as a string for the given token hashed value
 		for key in features.keys():
 			bytstr = hashlib.md5(key.encode()).hexdigest()
 			value = BitArray(hex=bytstr)
+			# the first two parts of the bitarray is b' so we ignore that
 			self.hashVal[key] = value.bin[2:]
 
+		# to count each hashed values position, determining to add or subtract
+		# the corresponding weight of the token
+
 		self.vector = np.zeros(126) # note that hashlib is 16 bytes, or 126 bits
+		
+		# will only be called 126 times, hence a constant loop
 		for i in range(0, len(self.vector) - 1):
+			# called for n number of hashed tokens
 			for key, number in self.hashVal.items():
-				# num_bits = 128
-				# bits = [(number >> bit) & 1 for bit in range(num_bits - 1, -1, -1)]
+				# again i is the current position we want to look at, will be 1 or 0
 				if number[i] == '1':
+					# if one, add weight to vect
 					self.vector[i] += features[key]
 				else:
+					# else subtract
 					self.vector[i] -= features[key]
 
+		# again a constant loop
+		# adjusts such that any positive number is represented by 1
+		# else it is 0
 		for i in range(len(self.vector)):
 			if self.vector[i] > 0:
 				self.vector[i] = 1
@@ -283,4 +343,10 @@ class SimHash:
 				self.vector[i] = 0
 
 		# https://stackoverflow.com/questions/41069825/convert-binary-01-numpy-to-integer-or-binary-string
+		# this is to get the b-bit fingerprint value for the computed vector
+		# this is the stored value and returned
+		# again credit to this line is given to the stackoverflow post above
+		# this computes the dot product on itself to compute the interger value
+		# from the 126 bit vector we computed. 
+		# this line was not my own code, but again grabbed from the link above
 		self.value = int(self.vector.dot(2**np.arange(self.vector.size)[::-1]))
